@@ -12,3 +12,8 @@ def nuevasCuentas(nAcc):
 	del password
 	global acc
 	acc = web3.eth.accounts
+
+contract_address = '0x0f114A1E9Db192502E7856309cc899952b3db1ED'
+with open("RTT.abi") as contract_abi_file:
+	contract_abi = json.load(contract_abi_file)
+RTT = web3.eth.contract(address = contract_address, abi = contract_abi)
