@@ -124,3 +124,82 @@ def fondeador(peers):
 	tiempo = time.perf_counter() - start
 	tiempoProm = tiempo/peers
 	return tiempo
+
+
+# a partir de ahora hago los tests
+tiempoProm = None
+mediciones = []
+
+# este es para hacer ciclos de ida y vuelta de los tokens simetricos (en caso par) para las dos primeras cuentas
+def test1(ciclos):
+	global tiempo, tiempoProm, mediciones
+	mediciones = []
+	start = time.perf_counter()
+	vaA = True
+	for i in range(ciclos):
+		startintern = time.perf_counter()
+		if (vaA):
+			print(i, 'Transfiero de 1 a 2')
+			transferir(1,2,1,i)
+			vaA = False
+		else:
+			print(i, 'Transfiero de 2 a 1')
+			transferir(2,1,1,i)
+			vaA = True
+		mediciones.append([i,time.perf_counter()-startintern])
+	tiempo = time.perf_counter() - start
+	tiempoProm = tiempo/ciclos
+	return tiempo
+
+# este es para enviar cierta cantidad de transacciones entre la primera y segunda cuenta
+def test2(idas, emisor):
+	global tiempo, tiempoProm, mediciones
+	mediciones = []
+	start = time.perf_counter()
+	for i in range(idas):
+		startintern = time.perf_counter()
+		if (emisor == 1):
+			print(i, 'Transfiero de 1 a 2')
+			transferir(1,2,1,i)
+		else:
+			print(i, 'Transfiero de 2 a 1')
+			transferir(2,1,1,i)
+		mediciones.append([i,time.perf_counter()-startintern])
+	tiempo = time.perf_counter() - start
+	tiempoProm = tiempo/idas
+	return tiempo
+
+# cicla transacciones de ida y vuelta entre un emisor y receptor dados
+def test3(ciclos, emisor, receptor):
+	global tiempo, tiempoProm, mediciones
+	mediciones = []
+	start = time.perf_counter()
+	vaA = True
+	for i in range(ciclos):
+		startintern = time.perf_counter()
+		if (vaA):
+			print(i, 'Transfiero de ', emisor, 'a', receptor)
+			transferir(emisor,receptor,1,i)
+			vaA = False
+		else:
+			print(i, 'Transfiero de ', receptor, 'a', emisor)
+			transferir(receptor,emisor,1,i)
+			vaA = True
+		mediciones.append([i,time.perf_counter()-startintern])
+	tiempo = time.perf_counter() - start
+	tiempoProm = tiempo/ciclos
+	return tiempo
+
+# envia ciertas idas de transacciones en un sentido entre un emisor y receptor dados
+def test4(idas, emisor, receptor):
+	global tiempo, tiempoProm, mediciones
+	mediciones = []
+	start = time.perf_counter()
+	for i in range(idas):
+		print(i, 'Transfiero de ', emisor, 'a', receptor)
+		startintern = time.perf_counter()
+		transferir(emisor,receptor,1,i)
+		mediciones.append([i,time.perf_counter()-startintern])
+	tiempo = time.perf_counter() - start
+	tiempoProm = tiempo/idas
+	return tiempo
