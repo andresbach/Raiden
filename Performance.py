@@ -96,3 +96,31 @@ def irse(emisor):# el fondeo lo hace sobre el total. Si ya puse antes, tiene que
 	leave = requests.delete('http://localhost:500'+str(emisor)+'/api/1/connections/0x0f114A1E9Db192502E7856309cc899952b3db1ED', headers={'Content-Type': 'application/json'})
 	tiempo = time.perf_counter() - start
 	return leave.json()
+
+# este crea canales entre una cuenta y su consecutiva. Fondea la primera
+def creador(peers):
+	global tiempo, tiempoProm, mediciones
+	mediciones = []
+	start = time.perf_counter()
+	for i in range(1, peers):
+		startintern = time.perf_counter()
+		print('Abro entre cuenta', i, 'y', i+1, 'por 10 tokens')
+		abrir(i, 10, i+1, 500)
+		mediciones.append([i,time.perf_counter()-startintern])
+	tiempo = time.perf_counter() - start
+	tiempoProm = tiempo/peers
+	return tiempo
+
+# este fondea desde una cuenta a su anterior para canales ya abiertos
+def fondeador(peers):
+	global tiempo, tiempoProm, mediciones
+	mediciones = []
+	start = time.perf_counter()
+	for i in range(1, peers):
+		startintern = time.perf_counter()
+		print('Fondeo entre cuenta', i+1, 'y', i, 'por 10 tokens')
+		fondeoCh(i+1, i, 10)
+		mediciones.append([i,time.perf_counter()-startintern])
+	tiempo = time.perf_counter() - start
+	tiempoProm = tiempo/peers
+	return tiempo
